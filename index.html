@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe App + Api</title>
+<style>
+    *{
+        margin: 0;
+        padding:0;
+        font-family: sans-serif;
+    }
+    body{
+        background-color: black;
+        color: #fff;
+    }
+    header nav{
+        background-color: #212121;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1;
+    }
+    header nav h1{
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+    header nav form{
+        display: flex;
+        justify-content: center;
+    }
+    form input[type="text"],button[type="submit"]{
+        flex-grow: 1;
+        margin-right: 10px;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 5px;
+        outline: none;
+    }
+    form button
+    {
+        background:#f44336;
+        color: #fff;
+        cursor: pointer;
+        padding: 7px 40px;
+        border: none;
+        font-size: 18px;
+        border-radius: 5px;
+    }
+    .recipe-container{
+        text-align: center;
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+        grid-gap:40px;
+        width: 80%;
+        margin: 10px auto;
+        padding: 20px;
+    }
+    .recipe{
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        color: black;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+    
+</style>
+</head>
+<body>
+    <!-- Header section code -->
+    <header>
+        <nav>
+            <h1>Recipe App</h1>
+            <form>
+                <input type="text" placeholder="Search For Recipes...." class="searchBox">
+                <button type="button" class="searchBtn">Search</button>
+            </form>
+        </nav>
+    </header>
+
+    <!-- Main section code -->
+
+    <main>
+        <section>
+            <div class="recipe-container">
+               <h2>Search Your Favourite recipes</h2>
+            </div>
+        </section>
+    </main>
+
+    <!-- javascript code -->
+
+<script>
+    const searchBox = document.querySelector(".searchBox");
+    const searchBtn = document.querySelector(".searchBtn");
+    const recipeContainer = document.querySelector(".recipe-container");
+
+
+    const fetchRecipes = async(query) =>{
+        recipeContainer.innerHTML = "<h2>Fetching Recipes....</h2>";
+        
+        const data  = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`);
+        const response = await data.json();
+        // console.log(response.meals[0]);
+        response.meals.forEach(meals =>{
+            const recipeDiv = document.createElement('div');
+            recipeDiv.classList.add('recipe');
+            recipeDiv.innerHTML = `
+            <img src="${meals.strMealThumb}"
+            <h3>${meals.strMeal}</h3>
+            <p>${meals.strArea}</p>
+            <p>${meals.strCategory}
+            `
+            recipeContainer.appendChild(recipeDiv);
+            console.log(recipeDiv);
+        })
+    }
+
+    searchBtn.addEventListener("click",(e)=>{
+        e.preventDefault();
+        const searchInput = searchBox.value.trim();
+        fetchRecipes(searchInput);
+    })
+
+</script>
+</body>
+</html>
